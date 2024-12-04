@@ -4,7 +4,7 @@ services:
   loadbalancer:
     image: nginx
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - app
     volumes:
@@ -25,7 +25,18 @@ services:
       - .:/var/www
     networks:
       - swoole-network
-
+  database:
+    image: mysql
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./deploy/entry/create-database.sql:/docker-entrypoint-initdb.d/create-database.sql
+    ports:
+      - "3307:3306"
+    networks:
+      - swoole-network
 
 networks:
   swoole-network:
